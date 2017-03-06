@@ -5,7 +5,7 @@ module.exports = function (sequelize) {
   return {
     addNewUser: function (user, cb) {
       User.create(user)
-        .then(function(instance){
+        .then(function (instance) {
           return cb(null, _.clone(instance.dataValues));
         })
         .catch(function (error) {
@@ -61,6 +61,28 @@ module.exports = function (sequelize) {
         .destroy({where: {id: id}})
         .then(function (number) {
           return number ? cb(null, true) : cb(null, false);
+        })
+        .catch(function (error) {
+          return cb(error);
+        });
+    },
+    findByUserName: function (username, cb) {
+      console.log('Access find by username');
+      User.findOne({
+        where: {username: username}
+      })
+        .then(function (user) {
+          return cb(null, user);
+        })
+        .catch(function (error) {
+          return cb(error);
+        });
+    },
+    findAll: function (cb) {
+      User.findAll({
+      })
+        .then(function (users) {
+          return cb(null, users);
         })
         .catch(function (error) {
           return cb(error);

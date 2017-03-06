@@ -18,6 +18,11 @@ var config = {
         host: 'localhost',
         port: '5432'
       }
+    },
+    
+    jwtSecret: "tyd_u&rcam-rasnvnd",
+    jwtSession: {
+        session: false
     }
   },
 
@@ -27,7 +32,12 @@ var config = {
       name: 'sources'
     },
     port: process.env.PORT || 3000,
-    db: 'postgres://localhost/sources-test'
+    db: 'postgres://localhost/sources-test',
+
+    jwtSecret: "tyd_u&rcam-rasnvnd",
+    jwtSession: {
+        session: false
+    }
   },
 
   production: {
@@ -36,7 +46,12 @@ var config = {
       name: 'sources'
     },
     port: process.env.PORT || 3000,
-    db: 'postgres://localhost/sources-production'
+    db: 'postgres://localhost/sources-production',
+
+    jwtSecret: "tyd_u&rcam-rasnvnd",
+    jwtSession: {
+        session: false
+    }
   }
 };
 

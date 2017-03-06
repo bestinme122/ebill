@@ -2,12 +2,19 @@ var validator = require('validator'),
   express = require('express'),
   router = express.Router(),
   db = require('../models'),
-  userService = require('../services/user_service')(db.sequelize);
+  jwt = require('jwt-simple'),
+  userService = require('../services/user_service')(db.sequelize),
+  auth = require('../auth');
+  config = require('../../config/config');
+
 
 module.exports = function (app) {
   app.use('/user', router);
 };
 
+/**
+ * API for add user
+ */
 router.post('/', function (req, res, next) {
   var user = {
     username: req.body.username,
@@ -37,11 +44,13 @@ router.post('/', function (req, res, next) {
 
     return res.json({message: "Successful", data: createdUser});
   })
-
 });
 
+/**
+ * API for login
+ */
 router.post('/login', function (req, res, next) {
-  
+
   var username = req.body.username,
     password = req.body.password;
 
@@ -56,14 +65,21 @@ router.post('/login', function (req, res, next) {
     error.status = 400;
     return next(error);
   }
-  
+
   userService.login(username, password, function (error, isSuccess) {
+    console.log('login with user: '+ username + ' pass: ' + password);
     if (error) {
       return next(error);
     }
-    return res.json({message: isSuccess ? "Successful" : "Fail"});
+    if(isSuccess){
+      var payload = {id: username};
+      console.log('config.jwtSecret: '+ config.jwtSecret);
+      var token = jwt.encode(payload, config.jwtSecret);
+      res.json({token: token});
+    }else{
+      return res.json({message: "Fail"});
+    }
   });
-
 });
 
 router.put('/change-password', function (req, res, next) {
@@ -84,7 +100,7 @@ router.put('/change-password', function (req, res, next) {
     return next(error);
   }
 
-  userService.changePassword(username, oldPassword, newPassword, function(error, isSuccess){
+  userService.changePassword(username, oldPassword, newPassword, function (error, isSuccess) {
     if (error) {
       return next(error);
     }
@@ -93,12 +109,25 @@ router.put('/change-password', function (req, res, next) {
 
 });
 
-router.delete('/:id(\\d+)/', function (req, res, next) {
+/**
+ * DELETE USER
+ */
+router.delete('/:id(\\d+)/', auth.isJwtAuthenticated, function (req, res, next) {
   userService.removeUserById(req.params.id, function (error, isDeleted) {
-    if (error) {  
+    if (error) {
       return next(error);
     }
 
     return res.json({message: "Successful", isDeleted: isDeleted});
+  });
+});
+
+router.get('/', auth.isJwtAuthenticated, function (req, res, next) {
+  userService.findAll(function (error, users) {
+    if (error) {
+      return next(error);
+    }
+
+    return res.json({list : users || []});
   });
 });
