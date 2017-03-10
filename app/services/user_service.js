@@ -1,6 +1,6 @@
 var _ = require('underscore');
 module.exports = function (sequelize) {
-  var User = require('../models/schemas')(sequelize).User;
+  var User = require('../models/user')(sequelize).User;
 
   return {
     addNewUser: function (user, cb) {
@@ -83,6 +83,18 @@ module.exports = function (sequelize) {
       })
         .then(function (users) {
           return cb(null, users);
+        })
+        .catch(function (error) {
+          return cb(error);
+        });
+    },
+    checkExist: function (id, cb) {
+      User.findOne({
+        where: {id: id}
+      })
+        .then(function (users) {
+          if(users)
+          return cb(null, Boolean(users));
         })
         .catch(function (error) {
           return cb(error);

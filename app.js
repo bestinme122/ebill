@@ -1,5 +1,4 @@
 
-
 var express = require('express'),
   config = require('./config/config'),
   db = require('./app/models');

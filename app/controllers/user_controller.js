@@ -128,6 +128,6 @@ router.get('/', auth.isJwtAuthenticated, function (req, res, next) {
       return next(error);
     }
 
-    return res.json({list : users || []});
+    return res.json(users || []);
   });
 });
