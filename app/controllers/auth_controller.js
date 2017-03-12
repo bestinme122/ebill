@@ -12,6 +12,8 @@ module.exports = function (app) {
 router.post('/token', function (req, res, next) {
   var username = req.body.username || null,
     password = req.body.password || null;
+
+  console.log(username + ' : ' + password + 'Reqest : ' + JSON.stringify(req.body));
   userService.findByUserName(username, function (error, instance) {
     if (error) {
       return next(error);
