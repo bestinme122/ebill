@@ -1,7 +1,7 @@
 var Sequelize = require('sequelize'),
   Const = require('../base/enum');
 module.exports = function (sequelize) {
-  var Article = sequelize.define('Article', {
+  var Permission = sequelize.define('Permission', {
     id: {
       type: Sequelize.INTEGER,
       allowNull: false,
@@ -9,17 +9,16 @@ module.exports = function (sequelize) {
       primaryKey: true,
       autoIncrement: true
     },
-    name: {type: Sequelize.STRING(250), allowNull: false},
-    icon: {type: Sequelize.STRING},
-    price: Sequelize.DECIMAL,
-    status: {type: Sequelize.INTEGER, defaultValue: Const.ArticleStatus.Active},
+    name: Sequelize.STRING(500),
+    default: {type: Sequelize.BOOLEAN, defaultValue: false},
+    status: {type: Sequelize.INTEGER, defaultValue: Const.PermisionStatus.Active},
   }, {
     timestamps: true,
     underscored: true,
-    tableName: 'articles'
+    tableName: 'permissions'
   });
 
   return {
-    Article: Article
+    Permission: Permission
   };
 }

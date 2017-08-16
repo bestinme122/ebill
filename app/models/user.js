@@ -1,4 +1,5 @@
 var Sequelize = require('sequelize');
+
 module.exports = function (sequelize) {
   var User = sequelize.define('User', {
     username: {type: Sequelize.STRING(250), allowNull: false, unique: true},
@@ -8,7 +9,7 @@ module.exports = function (sequelize) {
     address: Sequelize.STRING,
     avatar_url: Sequelize.STRING,
     phone: Sequelize.STRING,
-    role: Sequelize.STRING(250),
+    role_id: Sequelize.INTEGER,
     last_logged_in: Sequelize.DATE,
     status: {type: Sequelize.INTEGER, defaultValue: 1}
   }, {
